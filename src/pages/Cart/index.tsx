@@ -39,23 +39,30 @@ const Cart: React.FC = () => {
   const { increment, decrement, products } = useCart();
 
   function handleIncrement(id: string): void {
-    // TODO
+    increment(id);
   }
 
   function handleDecrement(id: string): void {
-    // TODO
+    decrement(id);
   }
 
   const cartTotal = useMemo(() => {
     // TODO RETURN THE SUM OF THE QUANTITY OF THE PRODUCTS IN THE CART
+    const totalPriceOfProducts = products.reduce(
+      (accumulator, product) => accumulator + product.price * product.quantity,
+      0,
+    );
 
-    return formatValue(0);
+    return formatValue(totalPriceOfProducts);
   }, [products]);
 
   const totalItensInCart = useMemo(() => {
     // TODO RETURN THE SUM OF THE QUANTITY OF THE PRODUCTS IN THE CART
-
-    return 0;
+    const totalProductsCount = products.reduce(
+      (accumulator, product) => accumulator + product.quantity,
+      0,
+    );
+    return totalProductsCount;
   }, [products]);
 
   return (
@@ -69,7 +76,7 @@ const Cart: React.FC = () => {
             height: 80,
           }}
           renderItem={({ item }: { item: Product }) => (
-            <Product>
+            <Product key={item.title}>
               <ProductImage source={{ uri: item.image_url }} />
               <ProductTitleContainer>
                 <ProductTitle>{item.title}</ProductTitle>
@@ -92,7 +99,7 @@ const Cart: React.FC = () => {
                   testID={`increment-${item.id}`}
                   onPress={() => handleIncrement(item.id)}
                 >
-                  <FeatherIcon name="plus" color="#E83F5B" size={16} />
+                  <FeatherIcon name="plus" color="#E83f5b" size={16} />
                 </ActionButton>
                 <ActionButton
                   testID={`decrement-${item.id}`}
@@ -105,6 +112,7 @@ const Cart: React.FC = () => {
           )}
         />
       </ProductContainer>
+
       <TotalProductsContainer>
         <FeatherIcon name="shopping-cart" color="#fff" size={24} />
         <TotalProductsText>{`${totalItensInCart} itens`}</TotalProductsText>
